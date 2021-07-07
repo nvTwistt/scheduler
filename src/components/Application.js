@@ -1,7 +1,13 @@
-import React , {useState} from "react";
-import DayList from "components/DayList";
+import React , {useState, useEffect} from "react";
 import "components/Application.scss";
 import Appointment from "components/Appointment";
+import DayList from "components/DayList";
+const axios = require(`axios`);
+
+//const [days, setDays] = useState([]);
+// useEffect(() => {
+//   const URL = `http://localhost:8001/api/days`
+// })
 const appointments = [
   {
     id: 1,
@@ -56,24 +62,26 @@ const appointments = [
     }
   },
 ];
-const days = [
-  {
-    id: 1,
-    name: "Monday",
-    spots: 2,
-  },
-  {
-    id: 2,
-    name: "Tuesday",
-    spots: 5,
-  },
-  {
-    id: 3,
-    name: "Wednesday",
-    spots: 0,
-  },
-];
+// const days = [
+//   {
+//     id: 1,
+//     name: "Monday",
+//     spots: 2,
+//   },
+//   {
+//     id: 2,
+//     name: "Tuesday",
+//     spots: 5,
+//   },
+//   {
+//     id: 3,
+//     name: "Wednesday",
+//     spots: 0,
+//   },
+// ];
+
 const getAppointments = function() {
+  
   return appointments.map(i => {
     return (
       <Appointment
@@ -87,6 +95,18 @@ const getAppointments = function() {
 }
 //const [day, setDay] = useState("Monday");
 export default function Application(props) {
+  const [days, setDays] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:8001/api/days")
+    //const URL = `http://localhost:8001/api/days`
+    .then((response) => {
+      console.log("The response: ",response);
+      console.log("The Data: ", response.data);
+      console.log("The Data: ", typeof(response.data));
+      setDays(response.data);
+    })
+  },[])
+  
   return (
     <main className="layout">
       <section className="sidebar">
@@ -97,7 +117,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-        <DayList days={days} day={"Monday"} setDay={() => "Monday"}/>
+        <DayList days={days} day={"Monday"} setDay={day => console.log(day)}/>
 
         </nav>
         <img
@@ -108,6 +128,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {getAppointments()}
+        {console.log(days)}
         <Appointment key="last" id="last" time="5pm" />
       </section>
     </main>
