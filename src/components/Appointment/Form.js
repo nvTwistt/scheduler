@@ -12,6 +12,7 @@ export default function Form (props){
     props.onCancel();
   }
   function submit() {
+    console.log("data get: ",name, value)
     if(name === "") {
       setError("Cannot have student name as empty");
       return;
