@@ -153,7 +153,21 @@ export default function Application(props) {
         );
     }
     function cancelInterview(id, interview) {
-      
+      const appointment = {
+        ...state.appointments[id],
+        interview: null
+      }
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      }
+      const requestUrl = `http://localhost:8001/api/appointments/`+id;
+      return (
+        axios.delete(requestUrl)
+        .then(() => {
+          setState({...state, appointments});
+        })
+      )
     }
     
     return ( 
@@ -164,6 +178,7 @@ export default function Application(props) {
       time={appointment.time}
       interview={interview}
       bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
       />
       
     );
