@@ -23,8 +23,8 @@ export default function useVisualMode(initialMode) {
       // let historyLength = history.slice(0,history.length - 1);
       // setHistory([...historyLength]);
       // setMode(history[history.length - 2]);
-      history.pop();
-      setHistory(history);
+      history.pop(); //pop the first element off the stack
+      setHistory(history); //set the history with the current stack
       setMode(history.slice(-1)[0]);
     }
   }

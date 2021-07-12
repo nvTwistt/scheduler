@@ -1,15 +1,54 @@
-import React, {useState, useEffect } from "react";
+import React, {useState, useEffect, useReducer } from "react";
 import axios from "axios";
 
+const DAYS = "DAYS";
+const REGISTRATION = "REGISTRATION";
+const INTERVIEW = "INTERVIEW";
+function reducer(state, action) {
+  switch(action.type) {
+    case DAYS:
+      return {...state, day: action.day};
+    case REGISTRATION:
+      return {
+        ...state,
+        days: action.days,
+        appointments: action.appointments,
+        interviewers: action.interviewers
+      };
+      case INTERVIEW: {
+        const days = state.days.map(day => {
+          let spotsAvailable = day.spots;
+          const nameCheck = day.name === state.day;
+          const noInterview = state.appointments[action.id].interview;
+          if (nameCheck && action.interview === null) {
+            spotsAvailable++;
+              return {...day, spots: spotsAvailable};
+          } else if (nameCheck && !noInterview) {
+            spotsAvailable--;
+              return {...day, spots: spotsAvailable};
+          }
+          return day;
+        })
+        const appointments = {...state.appointments};
+        appointments[action.id].interview = action.interview;
+        return {...state, appointments, days};
+      }
+      default:
+        throw new Error (
+          "Not allowed to perform this action!"
+        )
+  }
+}
+
 export default function useApplicationData(props) {
-  const [state, setState] = useState({
+  const [state, setState] = useReducer(reducer,{
     day: "Monday",
     days: [],
     appointments: {},
   });
   //co dailyAppointments = [];
   const setDay = (day) => {
-    setState({ ...state, day });
+    setState({type: DAYS, day});
   };
   //const setDays = (days) => setState((prev) => ({ ...prev, days }));
 
@@ -19,7 +58,13 @@ export default function useApplicationData(props) {
       axios.get("http://localhost:8001/api/appointments"),
       axios.get("http://localhost:8001/api/interviewers")
     ]).then((all) => {  
-      setState((prev) => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
+      //setState((prev) => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
+      setState(({
+        type: REGISTRATION,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data
+      }))
     })
   }, []);
     function bookInterview(id, interview) {
@@ -35,11 +80,11 @@ export default function useApplicationData(props) {
       return (
         axios.put(requestUrl, {interview})
         .then(() => {
-          setState({...state, appointments});
+          setState({type: INTERVIEW, id, interview});
         })
         );
     }
-    function cancelInterview(id, interview) {
+    function cancelInterview(id) {
       const appointment = {
         ...state.appointments[id],
         interview: null
@@ -52,7 +97,7 @@ export default function useApplicationData(props) {
       return (
         axios.delete(requestUrl)
         .then(() => {
-          setState({...state, appointments});
+          setState({type: INTERVIEW, id, interview: null});
         })
       )
     }
