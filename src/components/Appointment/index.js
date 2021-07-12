@@ -34,11 +34,7 @@ export default function Appointment(props) {
       student: name,
       interviewer
     };
-    console.log("This is the interview: ",interview)
     transition(SAVING);
-    if(interview.interviewer === null || interview.student === null) {
-      transition(ERROR_SAVE, true);
-    }
     props.bookInterview(props.id,interview)
     .then(() => transition(SHOW))
     .catch(() => {
