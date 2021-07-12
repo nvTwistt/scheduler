@@ -36,9 +36,12 @@ export default function Appointment(props) {
     };
     console.log("This is the interview: ",interview)
     transition(SAVING);
+    if(interview.interviewer === null || interview.student === null) {
+      transition(ERROR_SAVE, true);
+    }
     props.bookInterview(props.id,interview)
     .then(() => transition(SHOW))
-    .catch((error) => {
+    .catch(() => {
       transition(ERROR_SAVE, true);
     });
   }
@@ -128,7 +131,7 @@ export default function Appointment(props) {
         mode === ERROR_SAVE && (
           <Error
             message="Unable to save appointment."
-            onclose={back}
+            onClose={back}
           />
         )
       }
@@ -136,7 +139,7 @@ export default function Appointment(props) {
         mode === ERROR_DELETE && (
           <Error
             message="Unable to delete appointment."
-            onclose={back}
+            onClose={back}
           />
         )
       }
