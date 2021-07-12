@@ -11,13 +11,20 @@ export default function Form (props){
     onChange(null);
     props.onCancel();
   }
-  function submit() {
-    console.log("data get: ",name, value)
-    if(name === "") {
-      setError("Cannot have student name as empty");
+  // function submit() {
+  //   console.log("data get: ",name, value)
+  //   if(name === "") {
+  //     setError("Cannot have student name as empty");
+  //     return;
+  //   }
+  //   setError("");
+  //   props.onSave(name, value);
+  // }
+  function validate() {
+    if (name === "") {
+      setError("Student name cannot be blank");
       return;
     }
-    setError("");
     props.onSave(name, value);
   }
   return (
@@ -25,21 +32,23 @@ export default function Form (props){
   <section className="appointment__card-left">
     <form autoComplete="off" onSubmit={event => event.preventDefault()}>
       <input
-      onChange={event => 
-        setName(event.target.value)
-      }
+      
         className="appointment__create-input text--semi-bold"
-        name={name}
+        name="name"
         value={name}
         type="text"
         placeholder="Enter Student Name"
-        data-testid="student-name-input"
+        
         /*
           This must be a controlled component
         */
-       
+          onChange={event => 
+            setName(event.target.value)
+          }
+          data-testid="student-name-input"
       />
     </form>
+    <section className="appointment__validation">{error}</section>
     <InterviewerList 
     interviewers={props.interviewers} 
     value={value} 
@@ -48,7 +57,7 @@ export default function Form (props){
   <section className="appointment__card-right">
     <section className="appointment__actions">
       <Button danger onClick={reset}>Cancel</Button>
-      <Button confirm onClick={submit}>Save</Button>
+      <Button confirm onClick={validate}>Save</Button>
     </section>
   </section>
 </main>
