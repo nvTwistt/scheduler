@@ -99,7 +99,7 @@ export default function Appointment(props) {
       {
         mode === DELETE && (
           <Status
-          message="deleteing data"
+          message="deleting data"
           />
         )
       }
