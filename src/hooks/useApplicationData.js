@@ -71,9 +71,6 @@ export default function useApplicationData(props) {
   }, []);
   function bookInterview(id, interview) {
     return new Promise((resolve, reject) => {
-      if (!interview.interviewer || interview.student === "") {
-        return reject();
-      }
       const appointment = {
             ...state.appointments[id],
             interview: {...interview}
@@ -83,7 +80,7 @@ export default function useApplicationData(props) {
         requestUrl, appointment
         )
         .then(response => {
-          dispatchEvent({
+          setState({
             type: INTERVIEW,
             id, 
             interview
@@ -95,6 +92,23 @@ export default function useApplicationData(props) {
         })
     })
   }
+  // function bookInterview(id, interview) {
+  //   const appointment = {
+  //     ...state.appointments[id],
+  //     interview: {...interview}
+  //   }
+  //   const appointments = {
+  //     ...state.appointments,
+  //     [id]: appointment
+  //   }
+  //   const requestUrl = `http://localhost:8001/api/appointments/`+id;
+  //   return (
+  //     axios.put(requestUrl, {interview})
+  //     .then(() => {
+  //       setState({type: INTERVIEW, id, interview});
+  //     })
+  //     );
+  // }
     // function cancelInterview(id) {
     //   const appointment = {
     //     ...state.appointments[id],
@@ -117,12 +131,15 @@ export default function useApplicationData(props) {
       return new Promise((resolve, reject) => {
         return axios.delete(requestUrl)
         .then((response) => {
-          dispatchEvent({
+          setState({
             type: INTERVIEW,
             id, 
             interview: null
           })
           resolve(response);
+        })
+        .catch(err => {
+          reject(err);
         })
       })
     }
