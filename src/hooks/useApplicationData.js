@@ -69,32 +69,32 @@ export default function useApplicationData(props) {
       }))
     })
   }, []);
-    const bookInterview = (id, interview) => {
-      return new Promise((resolve, reject) => {
-        if (!interview.interviewer || interview.student === "") {
-          return reject();
-        }
-        const appointment = {
-              ...state.appointments[id],
-              interview: {...interview}
-            }
-        const requestUrl = `http://localhost:8001/api/appointments/`+id;
-        return axios.put(
-          requestUrl, appointment
-          )
-          .then(response => {
-            dispatchEvent({
-              type: INTERVIEW,
-              id, 
-              interview
-            })
-            resolve(response)
+  function bookInterview(id, interview) {
+    return new Promise((resolve, reject) => {
+      if (!interview.interviewer || interview.student === "") {
+        return reject();
+      }
+      const appointment = {
+            ...state.appointments[id],
+            interview: {...interview}
+          }
+      const requestUrl = `http://localhost:8001/api/appointments/`+id;
+      return axios.put(
+        requestUrl, appointment
+        )
+        .then(response => {
+          dispatchEvent({
+            type: INTERVIEW,
+            id, 
+            interview
           })
-          .catch(err => {
-            reject(err);
-          })
-      })
-    }
+          resolve(response)
+        })
+        .catch(err => {
+          reject(err);
+        })
+    })
+  }
     function cancelInterview(id) {
       const appointment = {
         ...state.appointments[id],
