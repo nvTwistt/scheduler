@@ -95,22 +95,36 @@ export default function useApplicationData(props) {
         })
     })
   }
-    function cancelInterview(id) {
-      const appointment = {
-        ...state.appointments[id],
-        interview: null
-      }
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      }
+    // function cancelInterview(id) {
+    //   const appointment = {
+    //     ...state.appointments[id],
+    //     interview: null
+    //   }
+    //   const appointments = {
+    //     ...state.appointments,
+    //     [id]: appointment
+    //   }
+    //   const requestUrl = `http://localhost:8001/api/appointments/`+id;
+    //   return (
+    //     axios.delete(requestUrl)
+    //     .then(() => {
+    //       setState({type: INTERVIEW, id, interview: null});
+    //     })
+    //   )
+    // }
+    function cancelInterview(id){
       const requestUrl = `http://localhost:8001/api/appointments/`+id;
-      return (
-        axios.delete(requestUrl)
-        .then(() => {
-          setState({type: INTERVIEW, id, interview: null});
+      return new Promise((resolve, reject) => {
+        return axios.delete(requestUrl)
+        .then((response) => {
+          dispatchEvent({
+            type: INTERVIEW,
+            id, 
+            interview: null
+          })
+          resolve(response);
         })
-      )
+      })
     }
     return {
       state,
