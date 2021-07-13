@@ -1,3 +1,4 @@
+import axios from "axios";
 const fixtures = {
   days: [
     {
@@ -81,5 +82,17 @@ export default {
         data: fixtures.interviewers
       });
     }
+  }),
+  put: jest.fn(() => {
+    return Promise.resolve({
+      status: 200,
+      statusText: "No content"
+    })
+  }),
+  delete: jest.fn(() => {
+    return Promise.resolve({
+      status: 200,
+      statusText: "No content"
+    })
   })
 };
