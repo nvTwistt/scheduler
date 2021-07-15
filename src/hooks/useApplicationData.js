@@ -7,31 +7,37 @@ const INTERVIEW = "INTERVIEW";
 function reducer(state, action) {
   switch(action.type) {
     case DAYS:
-      return {...state, day: action.day};
+      let dayObj = {...state, day: action.day};
+      return dayObj;
     case REGISTRATION:
-      return {
+      let regObj = {
         ...state,
         days: action.days,
         appointments: action.appointments,
         interviewers: action.interviewers
       };
+      return regObj;
       case INTERVIEW: {
         const days = state.days.map(day => {
           let spotsAvailable = day.spots;
           const nameCheck = day.name === state.day;
           const noInterview = state.appointments[action.id].interview;
-          if (nameCheck && action.interview === null) {
+          const gotInterview = action.interview === null;
+          if (nameCheck && gotInterview) {
             spotsAvailable++;
-              return {...day, spots: spotsAvailable};
+            const spotIncrement = {...day, spots: spotsAvailable};
+              return spotIncrement;
           } else if (nameCheck && !noInterview) {
             spotsAvailable--;
-              return {...day, spots: spotsAvailable};
+            const spotDecrement = {...day, spots: spotsAvailable};
+              return spotDecrement;
           }
           return day;
         })
         const appointments = {...state.appointments};
         appointments[action.id].interview = action.interview;
-        return {...state, appointments, days};
+        const appointmentObj = {...state, appointments, days};
+        return appointmentObj;
       }
       default:
         throw new Error (
@@ -39,27 +45,27 @@ function reducer(state, action) {
         )
   }
 }
-
-export default function useApplicationData(props) {
+/**
+ * function useApplicationData is a function that contains multiple utility functions
+ * Some of the functions include setting the day, using axios to make get requests to the api server
+ * function that books and cancels interviews.
+ * @returns Object of functions
+ */
+export default function useApplicationData() {
   const [state, setState] = useReducer(reducer,{
     day: "Monday",
     days: [],
     appointments: {},
   });
-  //co dailyAppointments = [];
   const setDay = (day) => {
     setState({type: DAYS, day});
   };
-  //const setDays = (days) => setState((prev) => ({ ...prev, days }));
-
   useEffect(() => {
     Promise.all([
       axios.get("/api/days"),
       axios.get("/api/appointments"),
       axios.get("/api/interviewers")
     ]).then((all) => {  
-      
-      //setState((prev) => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
       
       setState(({
         type: REGISTRATION,
@@ -92,40 +98,6 @@ export default function useApplicationData(props) {
         })
     })
   }
-  // function bookInterview(id, interview) {
-  //   const appointment = {
-  //     ...state.appointments[id],
-  //     interview: {...interview}
-  //   }
-  //   const appointments = {
-  //     ...state.appointments,
-  //     [id]: appointment
-  //   }
-  //   const requestUrl = `http://localhost:8001/api/appointments/`+id;
-  //   return (
-  //     axios.put(requestUrl, {interview})
-  //     .then(() => {
-  //       setState({type: INTERVIEW, id, interview});
-  //     })
-  //     );
-  // }
-    // function cancelInterview(id) {
-    //   const appointment = {
-    //     ...state.appointments[id],
-    //     interview: null
-    //   }
-    //   const appointments = {
-    //     ...state.appointments,
-    //     [id]: appointment
-    //   }
-    //   const requestUrl = `http://localhost:8001/api/appointments/`+id;
-    //   return (
-    //     axios.delete(requestUrl)
-    //     .then(() => {
-    //       setState({type: INTERVIEW, id, interview: null});
-    //     })
-    //   )
-    // }
     function cancelInterview(id){
       const requestUrl = `http://localhost:8001/api/appointments/`+id;
       return new Promise((resolve, reject) => {

@@ -1,6 +1,11 @@
 import React from "react";
 import "components/DayListItem.scss";
 import classNames from "classnames";
+/**
+ * Function takes in props as an argument and will calculate the number of spots remaining.
+ * @param {*} props 
+ * @returns HTML rendering to calculate the number of spots available.
+ */
 export default function DayListItem(props) {
   const itemClass = classNames("day-list__item", {
     "day-list__item--selected": props.selected,
@@ -13,9 +18,5 @@ export default function DayListItem(props) {
       remaining
       </p>
     </div>
-    // <li onClick={() => props.setDay(props.name)}>
-    //   <h2 className={itemClass}>{props.name}</h2>
-    //   <h3 className={itemClass}>{props.spots}</h3>
-    // </li>
   );
 }

@@ -1,4 +1,8 @@
 import React, {useState} from "react";
+/**
+ * function is another multi use function which takes care of the transitions as well as the
+ * back function which allows users to undo what they were doing in the application.
+ */
 export default function useVisualMode(initialMode) {
   const [mode, setMode] = useState(initialMode);
   const [history, setHistory] = useState([initialMode]);
@@ -20,12 +24,9 @@ export default function useVisualMode(initialMode) {
     if(history.length === 1) {
       setMode(history[0]);
     } else {
-      // let historyLength = history.slice(0,history.length - 1);
-      // setHistory([...historyLength]);
-      // setMode(history[history.length - 2]);
       history.pop(); //pop the first element off the stack
       setHistory(history); //set the history with the current stack
-      setMode(history.slice(-1)[0]);
+      setMode(history.slice(-1)[0]); //set the mode with the top element on the stack
     }
   }
   return {mode, transition, back};
