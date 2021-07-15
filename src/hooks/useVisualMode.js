@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 /**
  * function is another multi use function which takes care of the transitions as well as the
  * back function which allows users to undo what they were doing in the application.

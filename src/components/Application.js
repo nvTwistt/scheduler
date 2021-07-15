@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import useVisualMode from "hooks/useVisualMode";
+import React from "react";
 import "components/Application.scss";
 import Appointment from "components/Appointment";
 import DayList from "components/DayList";
@@ -12,7 +11,7 @@ import useApplicationData from "hooks/useApplicationData";
 /**
  * Function is designed to display the day and the appointments that are available/ booked
  * The map function returns the appointment form where can see the booked appointments on that day
- * @param {*} props 
+ * @param {*} props
  * @returns An html render of all the appointments for the day.
  */
 export default function Application(props) {

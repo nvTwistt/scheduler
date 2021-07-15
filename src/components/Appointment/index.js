@@ -8,17 +8,19 @@ import Confirm from "./Confirm";
 import Status from "./Status";
 import Error from "./Error";
 import Form from "./Form";
-import InterviewerListItem from "components/InterviewerListItem";
-const EMPTY = "EMPTY";
-const SHOW = "SHOW";
+/**
+ * Function deals with all the appointments and what is shown on screen
+ * The function utilizes the useVisualMode object to help render the appropriate contents
+ * on the scren.
+ * @param {*} props 
+ * @returns 
+ */
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
-  const BACK = "BACK";
   const SAVING = "SAVING";
   const CONFIRM = "CONFIRM";
-  const status = "STATUS";
   const DELETE = "DELETE";
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
@@ -27,9 +29,6 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
   function save(name, interviewer) {
-    console.log("saved");
-    console.log("name: ", name);
-    console.log("interviewer: ", interviewer);
     const interview = {
       student: name,
       interviewer
@@ -55,21 +54,6 @@ export default function Appointment(props) {
       transition(ERROR_DELETE, true);
     })
   }
-  // useEffect(() => {
-  //   if (
-  //     mode === EMPTY &&
-  //     props.interview &&
-  //     props.interview.student !== undefined
-  //   ) {
-  //     transition(SHOW);
-  //   } else if (
-  //     mode === SHOW &&
-  //     props.interview &&
-  //     props.interview.student === undefined
-  //   ) {
-  //     transition(EMPTY);
-  //   }
-  // }, [props.interview, mode, transition]);
   return (
     <section className="appointment" data-testid="appointment">
       <Header time={props.time} />
