@@ -6,7 +6,6 @@ import {useState} from "react";
 export default function useVisualMode(initialMode) {
   const [mode, setMode] = useState(initialMode);
   const [history, setHistory] = useState([initialMode]);
-  console.log("Current state history: ", history);
   const transition = function(newMode, recentError = false) {
     if (!recentError) {
       setMode(newMode)
@@ -23,7 +22,6 @@ export default function useVisualMode(initialMode) {
       return;
     } else {
       setHistory(prev => {
-        console.log("Stack of appointments before: ", prev);
         const hist = [...prev.slice(0, prev.length -1)]; //pop the first element off the stack
         return hist;
       })
