@@ -14,7 +14,7 @@ import useApplicationData from "hooks/useApplicationData";
  * @param {*} props
  * @returns An html render of all the appointments for the day.
  */
-export default function Application(props) {
+export default function Application() {
   const { state, setDay, bookInterview, cancelInterview } =
     useApplicationData();
   const dailyAppointments = getAppointmentsForDay(state, state.day);

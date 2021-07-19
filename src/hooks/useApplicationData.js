@@ -4,6 +4,14 @@ import axios from "axios";
 const DAYS = "DAYS";
 const REGISTRATION = "REGISTRATION";
 const INTERVIEW = "INTERVIEW";
+/**
+ * Reducer function takes in two arguments state and action
+ * The goal of this function is to help calculate the appointments available for the day
+ * based off of multiple different actions. 
+ * @param {*} state 
+ * @param {*} action 
+ * @returns 
+ */
 function reducer(state, action) {
   switch(action.type) {
     case DAYS:
@@ -81,7 +89,7 @@ export default function useApplicationData() {
             ...state.appointments[id],
             interview: {...interview}
           }
-      const requestUrl = `http://localhost:8001/api/appointments/`+id;
+      const requestUrl = `/api/appointments/`+id;
       return axios.put(
         requestUrl, appointment
         )
@@ -99,7 +107,7 @@ export default function useApplicationData() {
     })
   }
     function cancelInterview(id){
-      const requestUrl = `http://localhost:8001/api/appointments/`+id;
+      const requestUrl = `/api/appointments/`+id;
       return new Promise((resolve, reject) => {
         return axios.delete(requestUrl)
         .then((response) => {

@@ -6,27 +6,28 @@ import {useState} from "react";
 export default function useVisualMode(initialMode) {
   const [mode, setMode] = useState(initialMode);
   const [history, setHistory] = useState([initialMode]);
-
-  const transition = function(newMode, state = false) {
-    if (!state) {
+  console.log("Current state history: ", history);
+  const transition = function(newMode, recentError = false) {
+    if (!recentError) {
       setMode(newMode)
       setHistory((prev) => [...prev, newMode])
     } 
-    if (state) {
-      history.pop();
-      setHistory(history);
+    if (recentError) {
       setMode(newMode);
-      setHistory((prev) => [...prev, newMode]);
+      setHistory((prev) => [...prev.slice(0, prev.length -1), newMode]);
     }
     
   }
   const back = function(){
     if(history.length === 1) {
-      setMode(history[0]);
+      return;
     } else {
-      history.pop(); //pop the first element off the stack
-      setHistory(history); //set the history with the current stack
-      setMode(history.slice(-1)[0]); //set the mode with the top element on the stack
+      setHistory(prev => {
+        console.log("Stack of appointments before: ", prev);
+        const hist = [...prev.slice(0, prev.length -1)]; //pop the first element off the stack
+        return hist;
+      })
+      setMode(history.slice(-2)[0]); //set the mode with the top element on the stack
     }
   }
   return {mode, transition, back};
